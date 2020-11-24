@@ -1,0 +1,25 @@
+.descriptions {
+    float: right;
+    margin-top: 150px;
+    margin-right: 30px;
+    width: 40%;
+}
+.charts {
+    float: left;
+    width: 55%;
+}
+#barchart {
+    height: 70vh;
+}
+#linechart {
+    height: 70vh;
+}
+#countryChart {
+    height: 70vh;
+}
+h1 {
+    text-align: center;
+}
+h1, p {
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
