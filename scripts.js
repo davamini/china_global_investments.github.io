@@ -1,10 +1,11 @@
 google.charts.load('current', {
     'packages':['corechart', 'geochart'], 
-    'mapsApiKey':'AIzaSyCBYaGF8mL8Dh92AGSfwBgHjkDephxDSrs'});
+    'mapsApiKey':'AIzaSyCBYaGF8mL8Dh92AGSfwBgHjkDephxDSrs'
+});
 
+google.charts.setOnLoadCallback(drawRegionsMap);
 google.charts.setOnLoadCallback(drawBarChart);
 google.charts.setOnLoadCallback(drawLineChart);
-google.charts.setOnLoadCallback(drawRegionsMap);
 
 var company_data = [];
 var year_data = [];
@@ -119,7 +120,7 @@ function drawLineChart() {
     var data = google.visualization.arrayToDataTable(year_data);
 
       var options = {
-        title: 'Top 10 Countries China Invests in (Millions)',
+        title: "China's Total Global Investments Over Time in (Millions)",
         hAxis: {
             title: "Year",
           },
@@ -151,7 +152,6 @@ function drawRegionsMap() {
     var options = {
         legend: {textStyle: {color: 'black', fontSize: 16}},
         colorAxis: {colors: ['white', '#f76565', 'red']},
-        title: 'Top 10 Countries China Invests in (Millions)',
     };
 
     var chart = new google.visualization.GeoChart(document.getElementById('countryChart'));
@@ -160,9 +160,9 @@ function drawRegionsMap() {
   }
 
 function resize() {
-    drawLineChart();
+    drawRegionsMap();
     drawBarChart();
-    drawRegionsMap()
+    drawLineChart();
 }
 window.onload = resize;
 window.onresize = resize;
