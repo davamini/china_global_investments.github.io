@@ -9,7 +9,9 @@
 #country_column_charts {
     display: grid; 
     grid-template-columns: 50% 50%; 
+    margin-bottom: 50px;
 }
+#investment_by_sector_chart {}
 
 #barchart {
     height: 70vh;
