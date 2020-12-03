@@ -113,22 +113,22 @@ d3.csv("china_data.csv").then(function(data) {
         country_data.push(new_obj)
     }
     company_data = company_data.sort(function(a, b) { return b[1] - a[1]; }).slice(0, 10);
-    company_data.unshift(['Company', 'Investments']);
+    company_data.unshift(['Company', 'Investments (Millions)']);
 
     year_data = year_data.sort(function(a, b) { return b[0] - a[0]; }).slice(0, 10).reverse();
-    year_data.unshift(['Year', 'Investments']);
+    year_data.unshift(['Year', 'Investments (Millions)']);
 
     country_data.unshift(['Country', 'Total Investments (Millions)']);
 
     for (i=0; i < country_companies.length; i++) {
         country = country_companies[i];
         company_investment_per_country[country] = Object.entries(company_investment_per_country[country]).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 11);
-        company_investment_per_country[country].unshift(['Company', 'Investment']);
+        company_investment_per_country[country].unshift(['Company', 'Total Investments (Millions)']);
     }
     for (i=0; i < country_sectors.length; i++) {
         country = country_sectors[i];
         sector_investment_per_country[country] = Object.entries(sector_investment_per_country[country]).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 5);
-        sector_investment_per_country[country].unshift(['Sector', 'Investment']);
+        sector_investment_per_country[country].unshift(['Sector', 'Total Investments (Millions)']);
     }
     console.log(sector_investment_per_country);
 });
