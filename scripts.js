@@ -7,9 +7,13 @@ google.charts.setOnLoadCallback(drawRegionsMap);
 google.charts.setOnLoadCallback(drawBarChart);
 google.charts.setOnLoadCallback(drawLineChart);
 
+var country_column_drawn = false;
+var curr_country_for_column;
 var company_data = [];
 var year_data = [];
 var country_data = [];
+var company_investment_per_country = {};
+
 d3.csv("china_data.csv").then(function(data) {
 
     var company_obj = {};
@@ -54,12 +58,24 @@ d3.csv("china_data.csv").then(function(data) {
         } else {
             country_obj[country] = quantity_in_millions
         }
+
+        if (country in company_investment_per_country) {
+            if (investor in company_investment_per_country[country]) {
+                company_investment_per_country[country][investor] += quantity_in_millions;
+            } else {
+                company_investment_per_country[country][investor] = quantity_in_millions;
+            }
+        } else {
+            company_investment_per_country[country] = {};
+        }
     }
+    //console.log(company_investment_per_country);
     
     companies = Object.keys(company_obj);
     years = Object.keys(year_obj);
     countries = Object.keys(country_obj);
-
+    country_companies = Object.keys(company_investment_per_country)
+    
     for (i=0; i < companies.length; i++) {
         var total_invest = company_obj[companies[i]];
         var curr_company = companies[i];
@@ -85,6 +101,12 @@ d3.csv("china_data.csv").then(function(data) {
     year_data.unshift(['Year', 'Investments']);
 
     country_data.unshift(['Country', 'Investments']);
+
+    for (i=0; i < country_companies.length; i++) {
+        country = country_companies[i];
+        company_investment_per_country[country] = Object.entries(company_investment_per_country[country]).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 11);
+        company_investment_per_country[country].unshift(['Company', 'Investment']);
+    }
 });
 
 function drawBarChart() {
@@ -157,12 +179,59 @@ function drawRegionsMap() {
     var chart = new google.visualization.GeoChart(document.getElementById('countryChart'));
 
     chart.draw(data, options);
+    function myClickHandler(){
+        var selection = chart.getSelection();
+        try {
+            var row = parseInt(selection[0]['row']);
+        } catch(TypeError) {
+            return;
+        }
+        var country = country_data[row + 1][0];
+        draw_by_country(country);
+    }
+    google.visualization.events.addListener(chart, 'select', myClickHandler);
   }
+
+function draw_by_country(country) {
+    var curr_data = company_investment_per_country[country];
+    if (curr_data.length === 1) {
+        console.log(curr_data.length)
+        return;
+    }
+    var data = google.visualization.arrayToDataTable(curr_data);
+
+    var options = {
+        title: `Top 10 total investments in ${country} by company (Millions)`,
+        hAxis: {
+            title: "Company",
+          },
+        vAxis: {
+            title: "Investments (Millions)"
+        },
+        allowHtml: true,
+        bar: {groupWidth: "30%"},
+        legend: { position: "left" },
+        animation:{
+            startup: true,
+            duration: 1000,
+            easing: 'out',
+        },
+        colors:['red'],
+        };
+    var chart = new google.visualization.ColumnChart(document.getElementById("column_chart"));
+    chart.draw(data, options);
+    country_column_drawn = true;
+    curr_country_for_column = country;
+}
 
 function resize() {
     drawRegionsMap();
     drawBarChart();
     drawLineChart();
+    if (country_column_drawn) {
+        draw_by_country(curr_country_for_column);
+    }
 }
+
 window.onload = resize;
 window.onresize = resize;
