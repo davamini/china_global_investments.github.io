@@ -1,17 +1,17 @@
-.descriptions {
+.geo-description {
     margin-top: 110px;
     font-size: large;
 }
 .charts {
-    float: left;
-    width: 55%;
+    display: grid; 
+    grid-template-columns: 50% 50%; 
+   
 }
 #country_column_charts {
     display: grid; 
     grid-template-columns: 50% 50%; 
     margin-bottom: 50px;
 }
-#investment_by_sector_chart {}
 
 #barchart {
     height: 70vh;
@@ -28,4 +28,14 @@ figcaption {
     text-align: center;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-weight: bold;
+}
+
+li {
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    padding: 5px 0px; 
+}
+ul {
+    margin-top: 70px;
+    margin-right:210px;
 }

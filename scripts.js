@@ -130,7 +130,7 @@ d3.csv("china_data.csv").then(function(data) {
         sector_investment_per_country[country] = Object.entries(sector_investment_per_country[country]).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 5);
         sector_investment_per_country[country].unshift(['Sector', 'Total Investments (Millions)']);
     }
-    console.log(sector_investment_per_country);
+    //console.log(sector_investment_per_country);
 });
 
 function drawBarChart() {
@@ -220,7 +220,7 @@ function drawRegionsMap() {
 function draw_investment_by_country(country) {
     var curr_data = company_investment_per_country[country];
     if (curr_data.length === 1) {
-        console.log(curr_data.length)
+        //console.log(curr_data.length)
         return;
     }
     var data = google.visualization.arrayToDataTable(curr_data);
@@ -253,7 +253,7 @@ function draw_sector_by_country(country) {
 
     var curr_data = sector_investment_per_country[country];
     if (curr_data.length === 1) {
-        console.log(curr_data.length)
+        //console.log(curr_data.length)
         return;
     }
     var data = google.visualization.arrayToDataTable(curr_data);
@@ -274,8 +274,8 @@ function draw_sector_by_country(country) {
             duration: 1000,
             easing: 'out',
         },
-        height: 500,
-        colors:['red'],
+        height: 300,
+        colors:['red', "#F76565", "#F34C4C", "#F34343", "#F23232", "#F22424", "#F11919"]
         };
     var chart = new google.visualization.ColumnChart(document.getElementById("investment_by_sector_chart"));
     chart.draw(data, options);
