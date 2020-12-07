@@ -118,7 +118,7 @@ d3.csv("china_data.csv").then(function(data) {
     year_data = year_data.sort(function(a, b) { return b[0] - a[0]; }).slice(0, 10).reverse();
     year_data.unshift(['Year', 'Investments (Millions)']);
 
-    country_data.unshift(['Country', 'Total Investments (Millions)']);
+    country_data.unshift(['Country', 'Total Investments Since 2011 (Millions)']);
 
     for (i=0; i < country_companies.length; i++) {
         country = country_companies[i];
@@ -136,9 +136,8 @@ d3.csv("china_data.csv").then(function(data) {
 function drawBarChart() {
     
     var data = google.visualization.arrayToDataTable(company_data);
-
     var options = {
-    title: 'Top 10 Companies by Global Investment (Millions)',
+    title: 'Top 10 Companies by Global Investment Since 2011 (Millions)',
     subtitle: "<a href='https://www.aei.org/china-global-investment-tracker/?ncid=txtlnkusaolp00000618'>Source</a>",
     allowHtml: true,
     legend: {position: 'none'},
@@ -162,11 +161,11 @@ function drawBarChart() {
 }
 
 function drawLineChart() {
-
+    //console.log(year_data)
     var data = google.visualization.arrayToDataTable(year_data);
 
       var options = {
-        title: "China's Total Global Investments Over Time in (Millions)",
+        title: "China's Total Global Investments Over Time (Millions)",
         hAxis: {
             title: "Year",
           },
@@ -203,7 +202,7 @@ function drawRegionsMap() {
     var chart = new google.visualization.GeoChart(document.getElementById('countryChart'));
 
     chart.draw(data, options);
-    function myClickHandler(){
+    function click_func(){
         var selection = chart.getSelection();
         try {
             var row = parseInt(selection[0]['row']);
@@ -211,22 +210,26 @@ function drawRegionsMap() {
             return;
         }
         var country = country_data[row + 1][0];
-        draw_investment_by_country(country);
+        draw_investment_by_company(country);
         draw_sector_by_country(country);
     }
-    google.visualization.events.addListener(chart, 'select', myClickHandler);
+    google.visualization.events.addListener(chart, 'select', click_func);
   }
 
-function draw_investment_by_country(country) {
+function draw_investment_by_company(country) {
     var curr_data = company_investment_per_country[country];
-    if (curr_data.length === 1) {
-        //console.log(curr_data.length)
+    try {
+        if (curr_data.length === 1) {
+            //console.log(curr_data.length)
+            return;
+        }
+    } catch(TypeError) {
         return;
     }
     var data = google.visualization.arrayToDataTable(curr_data);
 
     var options = {
-        title: `Top Companies in ${country} by Total Investments (Millions)`,
+        title: `Top Companies in ${country} by Total Investments Since 2011 (Millions)`,
         hAxis: {
             title: "Company",
           },
@@ -235,7 +238,7 @@ function draw_investment_by_country(country) {
         },
         allowHtml: true,
         bar: {groupWidth: "30%"},
-        legend: { position: "left" },
+        legend: { position: "right" },
         animation:{
             startup: true,
             duration: 1000,
@@ -250,8 +253,32 @@ function draw_investment_by_country(country) {
 }
 
 function draw_sector_by_country(country) {
+    
+    var curr_data;
+    if (country === 'None') {
+        var result = {};
+        for (i = 0; i < country_sectors.length; i++) {
+            country = country_sectors[i];
+            for (var j = 0; j < sector_investment_per_country[country].length; j++) {
+                sector = sector_investment_per_country[country][j][0]
+                var investment = sector_investment_per_country[country][j][1]
+                if (isNaN(investment)) {
+                    continue;
+                }
+                if (sector in result) {
+                    result[sector] += investment;
+                } else {
+                    result[sector] = investment;
+                }
+            }
+        }
+        curr_data = Object.entries(result).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 9);;
+        curr_data.unshift(['Sector', 'Total Investments (Millions)']);
+        country = "The World";
 
-    var curr_data = sector_investment_per_country[country];
+    } else {
+        curr_data = sector_investment_per_country[country];
+    }
     if (curr_data.length === 1) {
         //console.log(curr_data.length)
         return;
@@ -259,7 +286,7 @@ function draw_sector_by_country(country) {
     var data = google.visualization.arrayToDataTable(curr_data);
 
     var options = {
-        title: `Top Sectors in ${country} by Total Investments (Millions)`,
+        title: `Top Sectors in ${country} by Total Investments Since 2011 (Millions)`,
         hAxis: {
             title: "Sector",
           },
@@ -275,7 +302,7 @@ function draw_sector_by_country(country) {
             easing: 'out',
         },
         height: 300,
-        colors:['red', "#F76565", "#F34C4C", "#F34343", "#F23232", "#F22424", "#F11919"]
+        colors:['red'],//, "#F76565", "#F34C4C", "#F34343", "#F23232", "#F22424", "#F11919"]
         };
     var chart = new google.visualization.ColumnChart(document.getElementById("investment_by_sector_chart"));
     chart.draw(data, options);
@@ -284,12 +311,17 @@ function draw_sector_by_country(country) {
 }
 
 function resize() {
+    if (document.getElementById('investment_by_country_chart').innerHTML === "") {
+        document.getElementById('investment_by_country_chart').innerHTML = "<h1 style='height: 50vh;float:left;margin-top:300px;margin-left:150px;'><- Click a Country</h1>"
+    }
     drawRegionsMap();
     drawBarChart();
     drawLineChart();
     if (country_column_drawn) {
-        draw_investment_by_country(curr_country_for_column);
+        draw_investment_by_company(curr_country_for_column);
         draw_sector_by_country(curr_country_for_column);
+    } else {
+        draw_sector_by_country("None");
     }
 }
 

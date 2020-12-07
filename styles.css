@@ -1,15 +1,16 @@
 .geo-description {
     margin-top: 110px;
-    font-size: large;
+    font-size: 120%;
+    margin-left: 16vw;
+    margin-right: 16vw;
 }
 .charts {
     display: grid; 
     grid-template-columns: 50% 50%; 
-   
 }
 #country_column_charts {
     display: grid; 
-    grid-template-columns: 50% 50%; 
+    grid-template-columns: 50% 50%;
     margin-bottom: 50px;
 }
 
@@ -32,10 +33,11 @@ figcaption {
 
 li {
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    font-weight: bold;
+
     padding: 5px 0px; 
 }
 ul {
     margin-top: 70px;
     margin-right:210px;
+    font-size: large;
 }
