@@ -14,6 +14,7 @@ var year_data = [];
 var country_data = [];
 var company_investment_per_country = {};
 var sector_investment_per_country = {};
+var country_investment_over_time = {};
 
 d3.csv("china_data.csv").then(function(data) {
 
@@ -24,7 +25,7 @@ d3.csv("china_data.csv").then(function(data) {
     var companies;
     var years;
     var countries;
-    var sectors;
+ 
 
     for (i=0; i < data.length; i++) {
         var investor = data[i]['Investor'];
@@ -64,6 +65,17 @@ d3.csv("china_data.csv").then(function(data) {
             country_obj[country] = quantity_in_millions
         }
 
+        if (country in country_investment_over_time) {
+            if (year in country_investment_over_time[country]) {
+                country_investment_over_time[country][year] += quantity_in_millions;
+            } else {
+                country_investment_over_time[country][year] = quantity_in_millions;
+            }
+        } else {
+            country_investment_over_time[country] = {};
+            country_investment_over_time[country][year] = quantity_in_millions
+        }
+
         if (country in company_investment_per_country) {
             if (investor in company_investment_per_country[country]) {
                 company_investment_per_country[country][investor] += quantity_in_millions;
@@ -74,7 +86,7 @@ d3.csv("china_data.csv").then(function(data) {
             company_investment_per_country[country] = {};
             company_investment_per_country[country][investor] = quantity_in_millions;
         }
-
+        
         if (country in sector_investment_per_country) {
             if (sector in sector_investment_per_country[country]) {
                 sector_investment_per_country[country][sector] += quantity_in_millions;
@@ -115,10 +127,10 @@ d3.csv("china_data.csv").then(function(data) {
     company_data = company_data.sort(function(a, b) { return b[1] - a[1]; }).slice(0, 10);
     company_data.unshift(['Company', 'Investments (Millions)']);
 
-    year_data = year_data.sort(function(a, b) { return b[0] - a[0]; }).slice(0, 10).reverse();
+    year_data = year_data.sort(function(a, b) { return b[0] - a[0]; }).reverse()
     year_data.unshift(['Year', 'Investments (Millions)']);
 
-    country_data.unshift(['Country', 'Total Investments Since 2011 (Millions)']);
+    country_data.unshift(['Country', 'Total Investments Since 2005 (Millions)']);
 
     for (i=0; i < country_companies.length; i++) {
         country = country_companies[i];
@@ -130,6 +142,12 @@ d3.csv("china_data.csv").then(function(data) {
         sector_investment_per_country[country] = Object.entries(sector_investment_per_country[country]).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 5);
         sector_investment_per_country[country].unshift(['Sector', 'Total Investments (Millions)']);
     }
+    var country_investment_over_time_countries = Object.keys(country_investment_over_time);
+    for (i=0; i < country_investment_over_time_countries.length; i++) {
+        country = country_investment_over_time_countries[i];
+        country_investment_over_time[country] = Object.entries(country_investment_over_time[country])
+        country_investment_over_time[country].unshift(['Year', 'Total Investments (Millions)']);
+    }
     //console.log(sector_investment_per_country);
 });
 
@@ -137,7 +155,7 @@ function drawBarChart() {
     
     var data = google.visualization.arrayToDataTable(company_data);
     var options = {
-    title: 'Top 10 Companies by Global Investment Since 2011 (Millions)',
+    title: 'Top 10 Companies by Global Investment Since 2005 (Millions)',
     subtitle: "<a href='https://www.aei.org/china-global-investment-tracker/?ncid=txtlnkusaolp00000618'>Source</a>",
     allowHtml: true,
     legend: {position: 'none'},
@@ -212,6 +230,7 @@ function drawRegionsMap() {
         var country = country_data[row + 1][0];
         draw_investment_by_company(country);
         draw_sector_by_country(country);
+        draw_country_investment_over_time(country);
     }
     google.visualization.events.addListener(chart, 'select', click_func);
   }
@@ -229,7 +248,7 @@ function draw_investment_by_company(country) {
     var data = google.visualization.arrayToDataTable(curr_data);
 
     var options = {
-        title: `Top Companies in ${country} by Total Investments Since 2011 (Millions)`,
+        title: `Top Companies in ${country} by China's Total Investments Since 2005 (Millions)`,
         hAxis: {
             title: "Company",
           },
@@ -238,7 +257,7 @@ function draw_investment_by_company(country) {
         },
         allowHtml: true,
         bar: {groupWidth: "30%"},
-        legend: { position: "right" },
+        legend: { position: "top" },
         animation:{
             startup: true,
             duration: 1000,
@@ -279,14 +298,18 @@ function draw_sector_by_country(country) {
     } else {
         curr_data = sector_investment_per_country[country];
     }
-    if (curr_data.length === 1) {
-        //console.log(curr_data.length)
+    try {
+        if (curr_data.length === 1) {
+            //console.log(curr_data.length)
+            return;
+        }
+    } catch(Error) {
         return;
     }
     var data = google.visualization.arrayToDataTable(curr_data);
 
     var options = {
-        title: `Top Sectors in ${country} by Total Investments Since 2011 (Millions)`,
+        title: `Top Sectors in ${country} by China's Total Investments Since 2005 (Millions)`,
         hAxis: {
             title: "Sector",
           },
@@ -295,7 +318,7 @@ function draw_sector_by_country(country) {
         },
         allowHtml: true,
         bar: {groupWidth: "30%"},
-        legend: { position: "left" },
+        legend: { position: "top" },
         animation:{
             startup: true,
             duration: 1000,
@@ -310,6 +333,33 @@ function draw_sector_by_country(country) {
     curr_country_for_column = country;
 }
 
+function draw_country_investment_over_time(country) {
+
+    var data = google.visualization.arrayToDataTable(country_investment_over_time[country]);
+
+      var options = {
+        allowHtml: true,
+        title: `China's Total Global Investments Over Time in ${country} (Millions)`,
+        hAxis: {
+            title: "Year",
+          },
+        vAxis: {
+            title: "Investments (Millions)"
+        },
+        legend: {position: 'top'},
+        animation:{
+            startup: true,
+            duration: 1000,
+            easing: 'out',
+        },
+        colors:['red'],
+        height: 300,
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('investment_by_country_over_time'));
+
+      chart.draw(data, options);
+}
 function resize() {
     if (document.getElementById('investment_by_country_chart').innerHTML === "") {
         document.getElementById('investment_by_country_chart').innerHTML = "<h1 style='height: 50vh;float:left;margin-top:300px;margin-left:150px;'><- Click a Country</h1>"
@@ -320,6 +370,7 @@ function resize() {
     if (country_column_drawn) {
         draw_investment_by_company(curr_country_for_column);
         draw_sector_by_country(curr_country_for_column);
+        draw_country_investment_over_time(curr_country_for_column);
     } else {
         draw_sector_by_country("None");
     }

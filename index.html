@@ -8,20 +8,23 @@
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBYaGF8mL8Dh92AGSfwBgHjkDephxDSrs&callback=initMap"
   type="text/javascript"></script>
-        <script src="scripts.js"></script>
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
-        <h1>Mainland China's Global Investments Visualized</h1>
+        <h1>The Rise and Fall of Mainland China's Global Investments</h1>
         <p style="text-align: center;">
             <a href="https://www.aei.org/china-global-investment-tracker/?ncid=txtlnkusaolp00000618" target="_blank">Source</a>&nbsp;&nbsp;
             <a href="https://github.com/davamini/china_global_investments.github.io" target="_blank">GitHub</a>
         </p>
+
         <div id="country_column_charts">
             <div id="countryChart"></div>
             <div id="investment_by_country_chart"></div>
         </div>
-        <div id="investment_by_sector_chart"></div>
+        <div class="charts">
+            <div id="investment_by_sector_chart"></div>
+            <div id="investment_by_country_over_time"></div>
+        </div>
         <div class="geo-description">
             <ul style="display: grid; grid-template-columns: 50% 50% ">
                 <li>Investment seems to be influenced more by a country's resources than its wealth. </li>
@@ -30,8 +33,8 @@
             </ul>
             <ul style="display: grid; grid-template-columns: 50% 50%; ">
                 <li>While real estate and finance play a big role in investment for the U.S. and U.K., China's greatest investments
-                    in other rich countries like Australia, France, and Norway are in energy</li>
-                <li style="margin-left:40px;">China's top global investments are in energy, metals, and transport </li>
+                    in other rich countries like Australia, France, and Norway are in energy.</li>
+                <li style="margin-left:40px;">China's top global investments are in energy, metals, and transport.</li>
             </ul>
         </div>
         <div class="charts">
@@ -57,5 +60,6 @@
                     which helps explain the extra steep decline from 2019 to 2020.</li>
             </ul>
         </div>
+        <script src="scripts.js"></script>
     </body>
 </html>
