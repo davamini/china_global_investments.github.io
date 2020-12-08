@@ -1,4 +1,4 @@
-﻿Year,Month,Investor, Quantity in Millions ,Share Size,Transaction Party,Sector,Subsector,Country,Region,BRI,Greenfield
+Year,Month,Investor, Quantity in Millions ,Share Size,Transaction Party,Sector,Subsector,Country,Region,BRI,Greenfield
 2005,January,Minmetals,$500 ,,Cubapetroleo,Metals,,Cuba,North America,,G
 2005,January,China Academy of Sciences,"$1,740 ",,IBM,Technology,,USA,USA,,
 2005,February,Minmetals,$550 ,,Codelco,Metals,Copper,Chile,South America,,G
@@ -998,7 +998,7 @@
 2016,April,"AVIC, Han's Laser",$120 ,95%,Aritex,Transport,Aviation,Spain,Europe,0,
 2016,May,China Molybdenum,"$2,650 ",56%,Tenke Fungurume,Metals,Copper,Democratic Republic of the Congo,Sub-Saharan Africa,0,
 2016,May,Guangdong Midea,$150 ,3%,Kuka,Technology,,Germany,Europe,0,
-2016,May,Shanghai Pengxin,$290 ,57%,Fiagril Participaçõe,Agriculture,,Brazil,South America,0,
+2016,May,Shanghai Pengxin,$290 ,57%,Fiagril Participa�?e,Agriculture,,Brazil,South America,0,
 2016,May,Shanghai Zhongji,$300 ,100%,Jagex,Entertainment,,Britain,Europe,0,
 2016,May,Mengniu Dairy,$220 ,79%,Burra Foods,Agriculture,,Australia,Australia,0,
 2016,May,Tsinghua Holdings,$120 ,2%,Marvell Technology Group,Technology,,USA,USA,0,
