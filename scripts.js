@@ -197,6 +197,8 @@ function drawLineChart() {
             easing: 'out',
         },
         colors:['red'],
+        curveType: 'function',
+        pointSize: 6,
       };
 
       var chart = new google.visualization.LineChart(document.getElementById('linechart'));
@@ -354,6 +356,8 @@ function draw_country_investment_over_time(country) {
         },
         colors:['red'],
         height: 300,
+        curveType: 'function',
+        pointSize: 6,
       };
 
       var chart = new google.visualization.LineChart(document.getElementById('investment_by_country_over_time'));
